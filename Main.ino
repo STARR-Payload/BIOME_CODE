@@ -14,3 +14,12 @@ String getData() {
 
   
 }
+
+
+float getTemperature() {
+
+
+
+
+
+}
