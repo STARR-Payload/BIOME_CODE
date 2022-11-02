@@ -8,7 +8,7 @@ void loop() {
 
 }
 
-String getData() {
+void getData() {
 
 
 
