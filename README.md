@@ -6,13 +6,13 @@ STARR Code for Arduino interface with sensors and control systems.
 
 
 
-
-# Whos doing what:
+# Assigned Tasks:
 
 
 
 
 # Problems:
+
 
 
 
@@ -26,3 +26,4 @@ STARR Code for Arduino interface with sensors and control systems.
 -Camera
 -Pressure maybe
 -very accurate accelerometer/gyroscope
+-buzzer for debug since lcd would require way too many pins
