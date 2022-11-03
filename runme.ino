@@ -1,6 +1,11 @@
+
+
+int solenoidPin = 4; //This is the output pin on the Arduino we are using
+
+
 void setup() {
   // put your setup code here, to run once:
-
+  pinMode(solenoidPin, OUTPUT);
 }
 
 void loop() {
@@ -9,7 +14,7 @@ void loop() {
 }
 
 void getData() {
-
+ // call all data gathering functions and write to sd card
 
 
   
@@ -17,9 +22,15 @@ void getData() {
 
 
 float getTemperature() {
+  // return float of the temperature of sensor in degrees
+
+}
 
 
+void solenoidOn() {
+  digitalWrite(solenoidPin, HIGH); 
+}
 
-
-
+void solenoidOff() {
+  digitalWrite(solenoidPin, LOW);
 }
