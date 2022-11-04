@@ -27,3 +27,11 @@ STARR Code for Arduino interface with sensors and control systems.
 -Pressure maybe
 -very accurate accelerometer/gyroscope
 -buzzer for debug since lcd would require way too many pins
+
+
+#Dont Do's:
+
+- Connect IO pin to ground
+- Connect 2 IO pins
+- When pins are output be super careful 
+- Overvolting IO pins
