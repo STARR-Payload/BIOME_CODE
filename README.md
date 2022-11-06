@@ -29,7 +29,7 @@ STARR Code for Arduino interface with sensors and control systems.
 - buzzer for debug since lcd would require way too many pins
 
 
-#Dont Do's:
+# Dont Do's:
 
 - Connect IO pin to ground
 - Connect 2 IO pins
