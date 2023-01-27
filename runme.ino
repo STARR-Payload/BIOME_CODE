@@ -1,11 +1,17 @@
 
 
-int solenoidPin = 5; //This is the output pin on the Arduino we are using
+int firstSolenoidPin = 5;
+int secondSolenoidPin = 6;
+int thirdSolenoidPin = 7;
+int fourthSolenoidPin = 8; 
 
 
 void setup() {
   // put your setup code here, to run once:
-  pinMode(solenoidPin, OUTPUT);
+  pinMode(firstSolenoidPin, OUTPUT);
+  pinMode(secondSolenoidPin, OUTPUT);
+  pinMode(thirdSolenoidPin, OUTPUT);
+  pinMode(fourthSolenoidPin, OUTPUT);
 }
 
 void loop() {
@@ -27,10 +33,10 @@ float getTemperature() {
 }
 
 
-void solenoidOn() {
-  digitalWrite(solenoidPin, HIGH); 
+void solenoidOn(int SolenoidPin) {
+  digitalWrite(SolenoidPin, HIGH); 
 }
 
-void solenoidOff() {
-  digitalWrite(solenoidPin, LOW);
+void solenoidOff(SolenoidPin) {
+  digitalWrite(SolenoidPin, LOW);
 }
