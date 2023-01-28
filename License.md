@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2023 Christiaan Lemmer Venter
+Copyright (c) 2023 Christiaan Lemmer Venter, STARR (Student Team for Alberta Rocketry Research)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
