@@ -1,5 +1,6 @@
 /*
  Copyright 2023 STARR Student Group at University of ALberta
+ 2023 Christiaan Lemmer Venter christiaanlemmer@hotmail.com
   
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are met:
