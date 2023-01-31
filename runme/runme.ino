@@ -41,21 +41,10 @@ Pin Layout
 int firstSolenoidPin = 5;
 int secondSolenoidPin = 6;
 int thirdSolenoidPin = 7;
-int fourthSolenoidPin = 8; 
-
-
-void setup() {
-  // put your setup code here, to run once:
-  pinMode(firstSolenoidPin, OUTPUT);
-  pinMode(secondSolenoidPin, OUTPUT);
-  pinMode(thirdSolenoidPin, OUTPUT);
-  pinMode(fourthSolenoidPin, OUTPUT);
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
-
-}
+int safetyTime; // to be talked about 
+int magnetometerAddress = 0x1C;
+int airQualitySensorAddress = 0x58;
+unsigned long time;
 
 void getData() {
  // call all data gathering functions and write to sd card
@@ -72,3 +61,64 @@ void solenoidOn(int SolenoidPin) {
 void solenoidOff(int SolenoidPin) {
   digitalWrite(SolenoidPin, LOW);
 }
+
+
+void redudancyMode(int timeElapsed) {
+
+
+}
+
+
+
+void checkTimePassed() {
+
+
+}
+
+
+
+int checkGs() {
+
+  // grab accelerometer data 
+  int gs;
+
+  if (gs > 2) {
+    return 1;
+  } else {
+    return 0;
+  }
+
+}
+
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+
+  // intialize pins for solenoid control 
+  pinMode(firstSolenoidPin, OUTPUT);
+  pinMode(secondSolenoidPin, OUTPUT);
+  pinMode(thirdSolenoidPin, OUTPUT);
+  
+  
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+ 
+  int launchCheck = checkGs();
+  while (launchCheck) {
+    launchCheck = checkGs();
+  }
+
+  // we have liftoff 
+
+
+  unsigned long intialTime = millis(); 
+
+  // checks time passed from epoch
+  time = millis() - intialTime;
+  Serial.print("\n");
+
+}
+
