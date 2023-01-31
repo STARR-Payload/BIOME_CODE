@@ -43,44 +43,36 @@ int secondSolenoidPin = 6;
 int thirdSolenoidPin = 7;
 int safetyTime; // to be talked about 
 int magnetometerAddress = 0x1C;
-int airQualitySensorAddress = 0x58;
+int airQualityAddress = 0x58;
+int accelerometerAddress = 0x68;
+int tempPressureHumidityGasAddress = 0x77;
 unsigned long time;
-
-void getData() {
- // call all data gathering functions and write to sd card
+unsigned long intialTime = millis(); 
 
 
-  
-}
 
 
-void solenoidOn(int SolenoidPin) {
+
+void solenoidOn(int SolenoidPin) { // easy on for solenoid 
   digitalWrite(SolenoidPin, HIGH); 
 }
 
-void solenoidOff(int SolenoidPin) {
+void solenoidOff(int SolenoidPin) { // easy off for solenoid
   digitalWrite(SolenoidPin, LOW);
 }
 
-
-void redudancyMode(int timeElapsed) {
-
-
-}
-
-
-
-void checkTimePassed() {
+void redudancyMode(int timeElapsed) { // will be called on if alti fails
 
 
 }
 
 
 
-int checkGs() {
+int checkGs() { // will be called on by loop to check when we have launch and set epoch time
 
   // grab accelerometer data 
   int gs;
+  delay(500);
 
   if (gs > 2) {
     return 1;
@@ -89,6 +81,11 @@ int checkGs() {
   }
 
 }
+
+
+
+
+
 
 
 void setup() {
@@ -109,16 +106,18 @@ void loop() {
   int launchCheck = checkGs();
   while (launchCheck) {
     launchCheck = checkGs();
+    
   }
 
   // we have liftoff 
 
 
-  unsigned long intialTime = millis(); 
+  
+  
 
   // checks time passed from epoch
   time = millis() - intialTime;
-  Serial.print("\n");
+  Serial.print(intialTime);
 
 }
 
