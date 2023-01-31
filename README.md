@@ -3,8 +3,12 @@ STARR Code for Arduino interface with sensors and control systems. University of
 
 # To Do's:
 
-
-
+ - Make function inside loop that assigns and collects all i2c sensors
+ - Make a relable function to intiate data logging on lift off as well as sets time(maybe store extra data before launch)
+ - Make a function that gets activated if redudancy is needed 
+ - Make a data logging loop for sd card and write sensor data, and large events
+ - Make a function that looks for altimeter pulses 
+ - Buzzer function that activates on landing and gives debug info 
 
 # Assigned Tasks:
 
@@ -15,12 +19,11 @@ STARR Code for Arduino interface with sensors and control systems. University of
 
 
 
-
 # Components that require code:
 
 - I^2C Bus components
 - Solenoid Valves
-- Altimeter/s (very dependant on deployed or not)
+- Altimeter 
 - buzzer for debug since lcd would require way too many pins
 
 
