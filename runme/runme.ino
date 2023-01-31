@@ -48,9 +48,16 @@ int accelerometerAddress = 0x68;
 int tempPressureHumidityGasAddress = 0x77;
 unsigned long time;
 unsigned long intialTime = millis(); 
+int buzzerPin; 
 
 
 
+void buzzer(int time) { // time will be in seconds
+  digitalWrite(buzzerPin, HIGH);
+  delay(time * 1000);
+  digitalWrite(buzzerPin, LOW);
+
+}
 
 
 void solenoidOn(int SolenoidPin) { // easy on for solenoid 
@@ -96,6 +103,7 @@ void setup() {
   pinMode(firstSolenoidPin, OUTPUT);
   pinMode(secondSolenoidPin, OUTPUT);
   pinMode(thirdSolenoidPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
   
   
 }
