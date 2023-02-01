@@ -1,3 +1,5 @@
+
+
 /*
  Copyright 2023 STARR Student Group at University of ALberta
  2023 Christiaan Lemmer Venter christiaanlemmer@hotmail.com
@@ -38,18 +40,32 @@ Pin Layout
  
 */
 
+int buzzerPin = 6;
+int firstSolenoidPin = 7;
+int secondSolenoidPin = 8;
+int thirdSolenoidPin = 9;
 
-int firstSolenoidPin = 5;
-int secondSolenoidPin = 6;
-int thirdSolenoidPin = 7;
-int safetyTime; // to be talked about 
+
+
+//int sdCSPin = 10;
+//int sdSCK = 13;
+//int sdMOSIPin = 11; 
+//int sdMISOpin = 12;
+
+
+
+
 int magnetometerAddress = 0x1C;
 int airQualityAddress = 0x58;
 int accelerometerAddress = 0x68;
 int tempPressureHumidityGasAddress = 0x77;
+
+
+
+int safetyTime; // to be talked about 
 unsigned long time;
 unsigned long intialTime = millis(); 
-int buzzerPin; 
+ 
 
 
 
