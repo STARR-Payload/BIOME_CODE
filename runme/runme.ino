@@ -47,7 +47,7 @@ int thirdSolenoidPin = 9;
 
 
 
-//int sdCSPin = 10;
+//int sdChipSelectPin = 4;
 //int sdSCK = 13;
 //int sdMOSIPin = 11; 
 //int sdMISOpin = 12;
@@ -92,7 +92,7 @@ void redudancyMode(int timeElapsed) { // will be called on if alti fails
 
 
 
-int checkGs() { // will be called on by loop to check when we have launch and set epoch time
+int checkGs() { // will be called on by loop to check when we have launch and set epoch time, should probably pass g instead 
 
   // grab accelerometer data 
   int gs;
