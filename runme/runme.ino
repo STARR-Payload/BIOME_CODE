@@ -45,29 +45,20 @@ int firstSolenoidPin = 7;
 int secondSolenoidPin = 8;
 int thirdSolenoidPin = 9;
 
-
-
 //int sdChipSelectPin = 4;
 //int sdSCK = 13;
 //int sdMOSIPin = 11; 
 //int sdMISOpin = 12;
-
-
-
 
 int magnetometerAddress = 0x1C;
 int airQualityAddress = 0x58;
 int accelerometerAddress = 0x68;
 int tempPressureHumidityGasAddress = 0x77;
 
-
-
 int safetyTime; // to be talked about 
 unsigned long time;
 unsigned long intialTime = millis(); 
  
-
-
 
 void buzzer(int time) { // time will be in seconds
   digitalWrite(buzzerPin, HIGH);
@@ -92,26 +83,6 @@ void redudancyMode(int timeElapsed) { // will be called on if alti fails
 
 
 
-int checkGs() { // will be called on by loop to check when we have launch and set epoch time, should probably pass g instead 
-
-  // grab accelerometer data 
-  int gs;
-  delay(500);
-
-  if (gs > 2) {
-    return 1;
-  } else {
-    return 0;
-  }
-
-}
-
-
-
-
-
-
-
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
@@ -128,17 +99,14 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
  
-  int launchCheck = checkGs();
-  while (launchCheck) {
-    launchCheck = checkGs();
-    
-  }
+  // launch check
+
+
+
 
   // we have liftoff 
 
 
-  
-  
 
   // checks time passed from epoch
   time = millis() - intialTime;
