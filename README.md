@@ -35,3 +35,11 @@ STARR Code for Arduino interface with sensors and control systems. University of
 - Connect 2 IO pins
 - When pins are output be super careful 
 - Overvolting IO pins
+
+
+# Pins:
+
+- 10-13 Digital for SD 
+- SCL and SDA for I2C connection
+- 9 Digital for Buzzer
+- 8-6 Digital for Relay Control
