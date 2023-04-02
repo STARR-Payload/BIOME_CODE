@@ -12,7 +12,7 @@ STARR Code for Arduino interface with sensors and control systems. University of
 
 # Assigned Tasks:
 
-- Software team to make sd comverter feel free to use any language i just randomly made a .py file
+- Software team to make sd comverter feel free to use any language i just randomly made a .py file (output in sdConversion folder)
 - Christiaan to do code for runme and testers 
 
 
