@@ -86,7 +86,7 @@ void redudancyMode(int timeElapsed) { // will be called on if alti fails
 void setup() {
   Serial.begin(9600);
   bmesetup();
-  bmetempprint();
+  bmeTempPrint();
 
   // intialize pins for solenoid control 
   pinMode(firstSolenoidPin, OUTPUT);
