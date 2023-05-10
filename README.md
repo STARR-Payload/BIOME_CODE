@@ -1,3 +1,6 @@
+# Important 
+- c_cpp_properties.json file is specific to the project author and will require paths to be changed if ran on other machines. This is due to arduino cli and how libraries are loaded. 
+
 # STARR-Payload
 STARR Code for Arduino interface with sensors and control systems. University of Alberta Rocketry Team.
 

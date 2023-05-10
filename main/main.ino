@@ -31,6 +31,8 @@
 
 */
 
+#include "tempHumiditySensor.h"
+
 /*
 Pin Layout
  
@@ -82,8 +84,9 @@ void redudancyMode(int timeElapsed) { // will be called on if alti fails
 
 
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(9600);
+  bmesetup();
+  bmetempprint();
 
   // intialize pins for solenoid control 
   pinMode(firstSolenoidPin, OUTPUT);

@@ -1,5 +1,5 @@
 {
     "board": "arduino:avr:uno",
     "port": "/dev/tty.usbmodem101",
-    "sketch": "testerFiles/tempHumiditySensor/tempHumiditySensor.ino"
+    "sketch": "main/main.ino"
 }

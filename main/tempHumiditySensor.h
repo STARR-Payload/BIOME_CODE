@@ -13,6 +13,8 @@
 
   Written by Limor Fried & Kevin Townsend for Adafruit Industries.
   BSD license, all text above must be included in any redistribution
+
+  Been highly modfified by STARR team
  ***************************************************************************/
 
 #include <Wire.h>
@@ -24,20 +26,17 @@
 #define BME_MISO 12
 #define BME_MOSI 11
 #define BME_CS 10
-
 #define SEALEVELPRESSURE_HPA (1013.25)
 
 Adafruit_BME680 bme; // I2C
-//Adafruit_BME680 bme(BME_CS); // hardware SPI
-//Adafruit_BME680 bme(BME_CS, BME_MOSI, BME_MISO,  BME_SCK);
 
-void setup() {
+void bmesetup() {
   Serial.begin(9600);
   while (!Serial);
   Serial.println(F("BME680 test"));
 
   if (!bme.begin()) {
-    Serial.println("Could not find a valid BME680 sensor, check wiring!");
+    Serial.println("Could not find a valid BME680 sensor, something is wrong");
     while (1);
   }
 
@@ -49,9 +48,15 @@ void setup() {
   bme.setGasHeater(320, 150); // 320*C for 150 ms
 }
 
-void loop() {
+void bmetempprint(){
+  Serial.print("Temperature = ");
+  Serial.print(bme.temperature);
+  Serial.println(" *C");
+}
+
+void bmeloop() {
   if (! bme.performReading()) {
-    Serial.println("Failed to perform reading :(");
+    Serial.println("Failed read, something is wrong");
     return;
   }
   Serial.print("Temperature = ");
