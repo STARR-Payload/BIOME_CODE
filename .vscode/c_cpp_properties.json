@@ -19,9 +19,10 @@
                 "/Users/christiaan/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/cores/arduino",
                 "/Users/christiaan/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/variants/standard",
                 "/Users/christiaan/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/libraries/Wire/src",
-                "/Users/christiaan/Documents/Arduino/libraries/Adafruit_SGP30_Sensor",
-                "/Users/christiaan/Documents/Arduino/libraries/Adafruit_BusIO",
                 "/Users/christiaan/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/libraries/SPI/src",
+                "/Users/christiaan/Documents/Arduino/libraries/Adafruit_Unified_Sensor",
+                "/Users/christiaan/Documents/Arduino/libraries/Adafruit_BME680_Library",
+                "/Users/christiaan/Documents/Arduino/libraries/Adafruit_BusIO",
                 "/Users/christiaan/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/lib/gcc/avr/7.3.0/include",
                 "/Users/christiaan/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/lib/gcc/avr/7.3.0/include-fixed",
                 "/Users/christiaan/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/avr/include"
