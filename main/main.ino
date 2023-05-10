@@ -1,5 +1,3 @@
-
-
 /*
  Copyright 2023 STARR Student Group at University of ALberta
  2023 Christiaan Lemmer Venter christiaanlemmer@hotmail.com

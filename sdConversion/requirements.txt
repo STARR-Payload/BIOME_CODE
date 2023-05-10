@@ -1,4 +1,9 @@
-# Format will be as follows:
-# Will be a plain text file with each line containing
-# What you need to do is read the file collect all data, make a nice excel and maybe some matplotlib to make some graphs
+
+
+Format will be as follows:
+- Will be multiple txt files each one minute increments labeled **DECIDE HERE**
+- Data:
+    - 
+
+
 
