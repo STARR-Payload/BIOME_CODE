@@ -40,46 +40,38 @@ Pin Layout
  
 */
 
-int buzzerPin = 6;
-int firstSolenoidPin = 7;
-int secondSolenoidPin = 8;
-int thirdSolenoidPin = 9;
-
-//int sdChipSelectPin = 4;
-//int sdSCK = 13;
-//int sdMOSIPin = 11; 
-//int sdMISOpin = 12;
+int buzzerPin = 7;
+int relayOne = 6;
+int relayTwo = 8;
+int relayThree = 9;
+int outletTempSensorOne = 2;
+int outletTempSensorTwo = 3;
+int outletTempSensorThree = 4;
+int outletTempSensorFour = 5;
 
 int magnetometerAddress = 0x1C;
 int airQualityAddress = 0x58;
 int accelerometerAddress = 0x68;
 int tempPressureHumidityGasAddress = 0x77;
 
-int safetyTime; // to be talked about 
-unsigned long time;
-unsigned long intialTime = millis(); 
  
 
-void buzzer(int time) { // time will be in seconds
+void buzzer() {
   digitalWrite(buzzerPin, HIGH);
-  delay(time * 1000);
+  delay(1000);
   digitalWrite(buzzerPin, LOW);
-
 }
 
 
-void solenoidOn(int SolenoidPin) { // easy on for solenoid 
-  digitalWrite(SolenoidPin, HIGH); 
+void relayOn(int relayPin) { 
+  digitalWrite(relayPin, HIGH); 
 }
 
-void solenoidOff(int SolenoidPin) { // easy off for solenoid
-  digitalWrite(SolenoidPin, LOW);
+void relayOff(int relayPin) {
+  digitalWrite(relayPin, LOW);
 }
 
-void redudancyMode(int timeElapsed) { // will be called on if alti fails
 
-
-}
 
 
 
@@ -89,29 +81,18 @@ void setup() {
   bmeTempPrint();
 
   // intialize pins for solenoid control 
-  pinMode(firstSolenoidPin, OUTPUT);
-  pinMode(secondSolenoidPin, OUTPUT);
-  pinMode(thirdSolenoidPin, OUTPUT);
+  pinMode(relayOne, OUTPUT);
+  pinMode(relayTwo, OUTPUT);
+  pinMode(relayThree, OUTPUT);
   pinMode(buzzerPin, OUTPUT);
   
   
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
  
-  // launch check
-
-
-
-
-  // we have liftoff 
-
-
-
-  // checks time passed from epoch
-  time = millis() - intialTime;
-  Serial.print(intialTime);
+  
+  
 
 }
 
