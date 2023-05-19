@@ -1,5 +1,5 @@
 Format will be as follows:
-- Will be multiple txt files each one minute increments labeled **DECIDE HERE**
+- Will be multiple txt files each 30 second increments labeled **DECIDE HERE**
 - Data:
     - 
 
