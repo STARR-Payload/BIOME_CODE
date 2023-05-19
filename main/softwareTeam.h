@@ -30,13 +30,3 @@ float airflowTemp(int valveNumber) {
 
 }
 
-bool airflowIsReady(int valveNumber) { // might not include still debating
-    /*
-    
-    Want to know if we are getting any weird values before we assume correct (very high or low temps)
-    
-    */
-
-   // CODE HERE
-
-}
