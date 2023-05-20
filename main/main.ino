@@ -31,14 +31,15 @@
 
 */
 
+/*
+#include "accelerometerSensor.h"
+#include "magnetometerSensor.h"
+#include "gasSensor.h"
+#include "sdReadWrite.h"
+#include "softwareTeam.h"
+*/
 #include "tempHumiditySensor.h"
 
-/*
-Pin Layout
- 
- 
- 
-*/
 
 int buzzerPin = 7;
 int relayOne = 6;
@@ -54,21 +55,23 @@ int airQualityAddress = 0x58;
 int accelerometerAddress = 0x68;
 int tempPressureHumidityGasAddress = 0x77;
 
+unsigned long startMillis;
+unsigned long currentMillis;
  
 
 void buzzer() {
-  digitalWrite(buzzerPin, HIGH);
-  delay(1000);
-  digitalWrite(buzzerPin, LOW);
+  	digitalWrite(buzzerPin, HIGH);
+  	delay(400);
+  	digitalWrite(buzzerPin, LOW);
 }
 
 
 void relayOn(int relayPin) { 
-  digitalWrite(relayPin, HIGH); 
+  	digitalWrite(relayPin, HIGH); 
 }
 
 void relayOff(int relayPin) {
-  digitalWrite(relayPin, LOW);
+  	digitalWrite(relayPin, LOW);
 }
 
 
@@ -76,23 +79,45 @@ void relayOff(int relayPin) {
 
 
 void setup() {
-  Serial.begin(9600);
-  bmesetup();
-  bmeTempPrint();
+  	Serial.begin(9600); // <- going to need work
+	
+	bmesetup(); // add other setups
 
-  // intialize pins for solenoid control 
-  pinMode(relayOne, OUTPUT);
-  pinMode(relayTwo, OUTPUT);
-  pinMode(relayThree, OUTPUT);
-  pinMode(buzzerPin, OUTPUT);
-  
-  
+	// intialize pins for solenoid control 
+	pinMode(relayOne, OUTPUT);
+	pinMode(relayTwo, OUTPUT);
+	pinMode(relayThree, OUTPUT);
+
+	// intialize pins for buzzer control 
+	pinMode(buzzerPin, OUTPUT);
+
+	startMillis = millis();  //initial start time
 }
 
+
+// START Time Valve1Temperature  Valve2Temperature  Valve3Temperature  Valve4Temperature  SENSORS SGP Co2  Ethanol  Vtol  H2  ACCEL x() y() z() xg() yg() zg() BME Temp  Alt  Pressure  Humidity  RELAYS 1(int) 2(int) 3(int) VOLTS measure()
+
 void loop() {
- 
-  
-  
+	
+	// code to loop until we have launch conditions
+	int launch = 0;
+	while(!launch) {
+		// get accelerometer reading 
+		// get alti reading (looking for @2)
+	}
+	
+	// we have launched
+
+	// data logging 
+
+
+
+	// buzzer 
+
+	while (1) {
+		buzzer();
+		delay(10000);
+	}
 
 }
 
