@@ -16,16 +16,15 @@ uint32_t getAbsoluteHumidity(float temperature, float humidity) {
     return absoluteHumidityScaled;
 }
 
-void setup() {
-  Serial.begin(115200);
-  while (!Serial) { delay(10); } // Wait for serial console to open!
-
+void gassetup() {
+  
   Serial.println("SGP30 test");
 
   if (! sgp.begin()){
     Serial.println("Sensor not found :(");
     while (1);
   }
+  
   Serial.print("Found SGP30 serial #");
   Serial.print(sgp.serialnumber[0], HEX);
   Serial.print(sgp.serialnumber[1], HEX);
@@ -36,7 +35,7 @@ void setup() {
 }
 
 int counter = 0;
-void loop() {
+void gasloop() {
   // If you have a temperature / humidity sensor, you can set the absolute humidity to enable the humditiy compensation for the air quality signals
   //float temperature = 22.1; // [°C]
   //float humidity = 45.2; // [%RH]

@@ -1,7 +1,0 @@
-Format will be as follows:
-- Will be multiple txt files each 30 second increments labeled **DECIDE HERE**
-- Data:
-    - 
-
-
-

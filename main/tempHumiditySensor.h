@@ -5,22 +5,18 @@
 #include <Adafruit_Sensor.h>
 #include "Adafruit_BME680.h"
 
-#define BME_SCK 13
-#define BME_MISO 12
-#define BME_MOSI 11
-#define BME_CS 10
 #define SEALEVELPRESSURE_HPA (1013.25)
 
 Adafruit_BME680 bme;
 
 void bmesetup() {
-  Serial.begin(9600);
-  while (!Serial);
-  Serial.println(F("BME680 test"));
+
+  
   if (!bme.begin()) {
     Serial.println("Could not find a valid BME680 sensor, something is wrong");
     while (1);
-  }
+  } 
+  Serial.println("BME is working");
   bme.setTemperatureOversampling(BME680_OS_8X);
   bme.setHumidityOversampling(BME680_OS_2X);
   bme.setPressureOversampling(BME680_OS_4X);
@@ -36,8 +32,8 @@ static void readingcheck() {
 }
 
 void bmeTempPrint(){
-  readingcheck();
-  Serial.print("Temperature = ");
+  
+  Serial.print("Tempera = ");
   Serial.print(bme.temperature);
   Serial.println(" *C");
   Serial.println();

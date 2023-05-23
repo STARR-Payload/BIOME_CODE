@@ -6,17 +6,12 @@
 
 Adafruit_ICM20649 icm;
 uint16_t measurement_delay_us = 65535; // Delay between measurements for testing
-// For SPI mode, we need a CS pin
-#define ICM_CS 10
-// For software-SPI mode we need SCK/MOSI/MISO pins
-#define ICM_SCK 13
-#define ICM_MISO 12
-#define ICM_MOSI 11
 
-void setup(void) {
-  Serial.begin(115200);
-  while (!Serial)
-    delay(10); // will pause Zero, Leonardo, etc until serial console opens
+
+
+
+void accelsetup(void) {
+  
 
   Serial.println("Adafruit ICM20649 test!");
 
@@ -85,7 +80,7 @@ void setup(void) {
   Serial.println();
 }
 
-void loop() {
+void accelloop() {
 
   //  /* Get a new normalized sensor event */
   sensors_event_t accel;

@@ -31,13 +31,14 @@
 
 */
 
-/*
+
+
 #include "accelerometerSensor.h"
-#include "magnetometerSensor.h"
+//#include "softwareTeam.h"
+//#include "magnetometerSensor.h"
 #include "gasSensor.h"
 #include "sdReadWrite.h"
-#include "softwareTeam.h"
-*/
+#include "serialData.h"
 #include "tempHumiditySensor.h"
 
 
@@ -57,11 +58,10 @@ int tempPressureHumidityGasAddress = 0x77;
 
 unsigned long startMillis;
 unsigned long currentMillis;
- 
 
-void buzzer() {
+void buzzer(int time) {
   	digitalWrite(buzzerPin, HIGH);
-  	delay(400);
+  	delay(time * 100);
   	digitalWrite(buzzerPin, LOW);
 }
 
@@ -76,48 +76,88 @@ void relayOff(int relayPin) {
 
 
 
+void dataLoop() {
+
+
+  return;
+}
+
+
 
 
 void setup() {
-  	Serial.begin(9600); // <- going to need work
+  Serial.begin(9600); // <- going to need work
 	
-	bmesetup(); // add other setups
+  SDsetup();
+  accelsetup();
+	bmesetup(); // add other setups CHECK BAUD RATE
+  readingcheck();
+  bmeTempPrint();
+  
+
 
 	// intialize pins for solenoid control 
 	pinMode(relayOne, OUTPUT);
 	pinMode(relayTwo, OUTPUT);
 	pinMode(relayThree, OUTPUT);
 
-	// intialize pins for buzzer control 
+	// intialize pin for buzzer control 
 	pinMode(buzzerPin, OUTPUT);
 
 	startMillis = millis();  //initial start time
 }
 
 
-// START Time Valve1Temperature  Valve2Temperature  Valve3Temperature  Valve4Temperature  SENSORS SGP Co2  Ethanol  Vtol  H2  ACCEL x() y() z() xg() yg() zg() BME Temp  Alt  Pressure  Humidity  RELAYS 1(int) 2(int) 3(int) VOLTS measure()
+
 
 void loop() {
 	
+  dataPacket Datapacket;
+  float 
+
 	// code to loop until we have launch conditions
-	int launch = 0;
-	while(!launch) {
-		// get accelerometer reading 
-		// get alti reading (looking for @2)
+	while(1) {
+    if (serialDataLeft() == 1) {
+      Datapacket = serialRead();
+    }
+    if (Datapacket.type == '@') {
+      if (Datapacket.data == 2) { // we have launched 
+        break;
+      }
+    }
+		// get accelerometer reading from sensor 
+
+
+
+
+
+    break; // temp so it doesnt keep looping 
 	}
 	
-	// we have launched
-
-	// data logging 
 
 
+  if (serialDataLeft() == 1) {
+    Datapacket = serialRead();
+  }
 
-	// buzzer 
 
-	while (1) {
-		buzzer();
-		delay(10000);
-	}
 
+  if (Datapacket.type == '@') {
+    if (Datapacket.data == 5) { // we have nose over start data collection loop
+      dataLoop();
+    }
+  }
+
+
+
+
+ 
+  if (Datapacket.type == '@') {
+    if (Datapacket.data == 9) { // we have landed... One small step for man one giant leap for some stupid uni kids
+      
+    }
+  }
+
+	
 }
 
