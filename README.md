@@ -13,12 +13,7 @@ STARR Code for Arduino interface with sensors and control systems. University of
 
 # Assigned Tasks:
 
-- Software to make header file for temperature sensors 
-- Software to make parsing code for data 
-  - Pending till I get format 
-- Christiaan to make header files for all sensors 
-  - BLANK
-- Christiaan to work on main.ino
+- 
 
 
 # Problems:
@@ -26,7 +21,7 @@ STARR Code for Arduino interface with sensors and control systems. University of
 - 
 
 
-# Dont Do's:
+# Dont Do List:
 
 - Connect IO pin to ground
 - Connect 2 IO pins
