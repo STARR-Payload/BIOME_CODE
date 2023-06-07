@@ -16,11 +16,6 @@ STARR Code for Arduino interface with sensors and control systems. University of
 - 
 
 
-# Problems:
-
-- 
-
-
 # Dont Do List:
 
 - Connect IO pin to ground
