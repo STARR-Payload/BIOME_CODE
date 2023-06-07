@@ -35,7 +35,7 @@
 
 #include "accelerometerSensor.h"
 //#include "softwareTeam.h"
-//#include "magnetometerSensor.h"
+#include "magnetometerSensor.h"
 #include "gasSensor.h"
 #include "sdReadWrite.h"
 #include "serialData.h"
@@ -59,12 +59,15 @@ int tempPressureHumidityGasAddress = 0x77;
 unsigned long startMillis;
 unsigned long currentMillis;
 
-void buzzer(int time) {
+void buzzer(int time) { // time is in 1/10 second so if time == 10 then buzz for 1 sec
   	digitalWrite(buzzerPin, HIGH);
   	delay(time * 100);
   	digitalWrite(buzzerPin, LOW);
 }
 
+int voltCheck() {
+  return;
+}
 
 void relayOn(int relayPin) { 
   	digitalWrite(relayPin, HIGH); 
@@ -74,25 +77,43 @@ void relayOff(int relayPin) {
   	digitalWrite(relayPin, LOW);
 }
 
+void dataToSD() {
 
 
-void dataLoop() {
+
+  //valveOneTemp, valveTwoTemp, valveThreeTemp, valveFourTemp, SGPCO2, SGPEth, SGPVTOL, SGPH2, ACCELx, ACCELy, ACCELz, GYROx, GYROy, GYROz, BMETemp, BMEAltitude, BMEPressure, BattVolts;
+  //RELAY1, RELAY2, RELAY3;
 
 
-  return;
+}
+
+void dataLoop(dataPacket Datapacket) { // here when we reach nose over
+
+
+  if (Datapacket.type == '@') {
+    if (Datapacket.data == 9) { // we have landed... One small step for man one giant leap for some stupid uni kids
+      return;
+    }
+  }
+  return; // temp so we actually exit 
 }
 
 
 
 
 void setup() {
-  Serial.begin(9600); // <- going to need work
+  Serial.begin(9600); // <- going to need work (serial rate of alti)
 	
   SDsetup();
-  accelsetup();
-	bmesetup(); // add other setups CHECK BAUD RATE
-  readingcheck();
-  bmeTempPrint();
+  accelsetup(); // needs serial baud rate flushing
+  gassetup();
+  magsetup();
+	bmesetup();
+
+
+
+  bmereadingcheck();
+
   
 
 
@@ -113,7 +134,10 @@ void setup() {
 void loop() {
 	
   dataPacket Datapacket;
-  float 
+  //float valveOneTemp, valveTwoTemp, valveThreeTemp, valveFourTemp, SGPCO2, SGPEth, SGPVTOL, SGPH2, ACCELx, ACCELy, ACCELz, GYROx, GYROy, GYROz, BMETemp, BMEAltitude, BMEPressure, BattVolts;
+  //int RELAY1, RELAY2, RELAY3;
+
+
 
 	// code to loop until we have launch conditions
 	while(1) {
@@ -126,17 +150,12 @@ void loop() {
       }
     }
 		// get accelerometer reading from sensor 
-
-
-
-
-
     break; // temp so it doesnt keep looping 
 	}
 	
 
 
-  if (serialDataLeft() == 1) {
+  if (serialDataLeft() == 1) { // keep reading packets until we get nose over
     Datapacket = serialRead();
   }
 
@@ -144,20 +163,16 @@ void loop() {
 
   if (Datapacket.type == '@') {
     if (Datapacket.data == 5) { // we have nose over start data collection loop
-      dataLoop();
+      dataLoop(Datapacket); // should prob make a new packet in dataloop no? 
     }
   }
 
 
-
-
- 
-  if (Datapacket.type == '@') {
-    if (Datapacket.data == 9) { // we have landed... One small step for man one giant leap for some stupid uni kids
-      
-    }
+  // here once we landed 
+  while (1) {
+    delay(10000);
+    buzzer(5);
   }
-
 	
 }
 

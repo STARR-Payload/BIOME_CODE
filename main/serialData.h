@@ -17,7 +17,6 @@ static const char MaxVelocityChar = '^'; // Max Velocity fps
 
 static const char TerminatorByte = '>'; // Terminator byte - ohhhh no whats happening I feel different..... ARGGGG I AM THE TERMINATOR, ILL BE BACK
 
-
 typedef struct dataPacket{
     char type;
     long long int data;

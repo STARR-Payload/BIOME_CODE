@@ -13,52 +13,27 @@ uint16_t measurement_delay_us = 65535; // Delay between measurements for testing
 void accelsetup(void) {
   
 
-  Serial.println("Adafruit ICM20649 test!");
-
   // Try to initialize!
   if (!icm.begin_I2C()) {
-    // if (!icm.begin_SPI(ICM_CS)) {
-    // if (!icm.begin_SPI(ICM_CS, ICM_SCK, ICM_MISO, ICM_MOSI)) {
 
-    Serial.println("Failed to find ICM20649 chip");
+    Serial.println("Could not find a valid ICM20649 sensor, something is wrong");
     while (1) {
       delay(10);
     }
   }
-  Serial.println("ICM20649 Found!");
-  // icm.setAccelRange(ICM20649_ACCEL_RANGE_4_G);
-  Serial.print("Accelerometer range set to: ");
-  switch (icm.getAccelRange()) {
-  case ICM20649_ACCEL_RANGE_4_G:
-    Serial.println("+-4G");
-    break;
-  case ICM20649_ACCEL_RANGE_8_G:
-    Serial.println("+-8G");
-    break;
-  case ICM20649_ACCEL_RANGE_16_G:
-    Serial.println("+-16G");
-    break;
-  case ICM20649_ACCEL_RANGE_30_G:
-    Serial.println("+-30G");
-    break;
-  }
 
-  // icm.setGyroRange(ICM20649_GYRO_RANGE_500_DPS);
-  Serial.print("Gyro range set to: ");
-  switch (icm.getGyroRange()) {
-  case ICM20649_GYRO_RANGE_500_DPS:
-    Serial.println("500 degrees/s");
-    break;
-  case ICM20649_GYRO_RANGE_1000_DPS:
-    Serial.println("1000 degrees/s");
-    break;
-  case ICM20649_GYRO_RANGE_2000_DPS:
-    Serial.println("2000 degrees/s");
-    break;
-  case ICM20649_GYRO_RANGE_4000_DPS:
-    Serial.println("4000 degrees/s");
-    break;
-  }
+
+
+  Serial.println("ICM20649 Found!");
+
+  icm.setAccelRange(ICM20649_ACCEL_RANGE_16_G); 
+    
+  icm.setGyroRange(ICM20649_GYRO_RANGE_500_DPS); 
+  
+
+
+
+  // DECIDE ON THIS ALL BELOW it was given baseline but i want to explore more 
 
   //  icm.setAccelRateDivisor(4095);
   uint16_t accel_divisor = icm.getAccelRateDivisor();
@@ -80,6 +55,10 @@ void accelsetup(void) {
   Serial.println();
 }
 
+
+
+
+
 void accelloop() {
 
   //  /* Get a new normalized sensor event */
@@ -88,45 +67,42 @@ void accelloop() {
   sensors_event_t temp;
   icm.getEvent(&accel, &gyro, &temp);
 
-  Serial.print("\t\tTemperature ");
-  Serial.print(temp.temperature);
-  Serial.println(" deg C");
-
-  /* Display the results (acceleration is measured in m/s^2) */
-  Serial.print("\t\tAccel X: ");
-  Serial.print(accel.acceleration.x);
-  Serial.print(" \tY: ");
-  Serial.print(accel.acceleration.y);
-  Serial.print(" \tZ: ");
-  Serial.print(accel.acceleration.z);
-  Serial.println(" m/s^2 ");
-
-  /* Display the results (acceleration is measured in m/s^2) */
-  Serial.print("\t\tGyro X: ");
-  Serial.print(gyro.gyro.x);
-  Serial.print(" \tY: ");
-  Serial.print(gyro.gyro.y);
-  Serial.print(" \tZ: ");
-  Serial.print(gyro.gyro.z);
-  Serial.println(" radians/s ");
-  Serial.println();
-
   delay(100);
-
-  //  Serial.print(temp.temperature);
-  //
-  //  Serial.print(",");
-  //
-  //  Serial.print(accel.acceleration.x);
-  //  Serial.print(","); Serial.print(accel.acceleration.y);
-  //  Serial.print(","); Serial.print(accel.acceleration.z);
-  //
-  //  Serial.print(",");
-  //  Serial.print(gyro.gyro.x);
-  //  Serial.print(","); Serial.print(gyro.gyro.y);
-  //  Serial.print(","); Serial.print(gyro.gyro.z);
-
-  //  Serial.println();
-  //
-  //  delayMicroseconds(measurement_delay_us);
 }
+
+
+
+// PROBLEM HERE WITH THE EVENT HANDLER !!!!!!!!!!!!!!!!!!!!
+
+/*
+float accelTemp() {
+  return temp.temperature; // C
+}
+
+float accelX() {
+  return accel.acceleration.x;  // m/s^2
+}
+
+float accelY() {
+  return accel.acceleration.y;  // m/s^2
+}
+
+float accelZ() {
+  return accel.acceleration.z;  // m/s^2
+}
+
+
+float gyroX() {
+  return gyro.gyro.x // rads/s
+}
+
+
+float gyroY() {
+  return gyro.gyro.y // rads/s
+}
+
+
+float gyroZ() {
+  return gyro.gyro.z // rads/s
+}
+*/

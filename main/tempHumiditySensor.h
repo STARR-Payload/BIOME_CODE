@@ -24,46 +24,30 @@ void bmesetup() {
   bme.setGasHeater(320, 150); // 320*C for 150 ms
 }
 
-static void readingcheck() {
+static void bmereadingcheck() {
   if (! bme.performReading()) {
     Serial.println("Failed read, something is wrong");
     return;
   }
 }
 
-void bmeTempPrint(){
-  
-  Serial.print("Tempera = ");
-  Serial.print(bme.temperature);
-  Serial.println(" *C");
-  Serial.println();
+float bmeTemp(){
+  return bme.temperature; // C
 }
 
-void bmePressurePrint() {
-  Serial.print("Pressure = ");
-  Serial.print(bme.pressure / 100.0);
-  Serial.println(" hPa");
-  Serial.println();
+float bmePressure() {
+  return bme.pressure / 100.0; // hPa
 }
 
-void bmehumdityPrint(){
-  Serial.print("Humidity = ");
-  Serial.print(bme.humidity);
-  Serial.println(" %");
-  Serial.println();
+float bmehumdity(){
+  return bme.humidity; // %
 }
 
-void bmeGasPrint() {
-  Serial.print("Gas = ");
-  Serial.print(bme.gas_resistance / 1000.0);
-  Serial.println(" KOhms");
-  Serial.println();
+float bmeGas() {
+  return bme.gas_resistance / 1000.0; // KOhms
 }
 
-void bmeAltiPrint() {
-  Serial.print("Approx. Altitude = ");
-  Serial.print(bme.readAltitude(SEALEVELPRESSURE_HPA));
-  Serial.println(" m");
-  Serial.println();
+float bmeAlti() {
+  return bme.readAltitude(SEALEVELPRESSURE_HPA); // meters 
 }
 
