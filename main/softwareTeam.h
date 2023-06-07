@@ -1,8 +1,11 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-// Define precision of temperature in bits
-#define TEMP_PRECISION 12
+// Define precision of recorded temperature in bits.
+// Ranges from 9 to 12 bits, with 12 corresponsing to 
+// 4 decimal places and 9 corresponding to 1 decimal place.
+enum Precision {min = 9, low = 10, high = 11, max = 12};
+int tempPrecision = max;
 
 // Define i/o pins for valves (index 0 corresponds to valve 1's pin and so forth)
 OneWire sensorPins[] = {6, 5, 3, 2};
@@ -34,14 +37,14 @@ void airflowSetup(int valveNumber) {
 
         sensors[index].setOneWire(&sensorPins[index]);
         sensors[index].begin();
-        if (sensors[index].getAddress(deviceAddress, 0)) sensors[index].setResolution(deviceAddress, TEMP_PRECISION);
+        if (sensors[index].getAddress(deviceAddress, 0)) sensors[index].setResolution(deviceAddress, tempPrecision);
         isIni[index] = 1;
     }
 
     Serial.println("Done");
 }
 
-// Return temperature of individual valve sensor
+// Returns temperature of individual valve sensor
 float airflowTemp(int valveNumber) {
     int index = valveNumber-1;
     sensors[index].requestTemperatures();
