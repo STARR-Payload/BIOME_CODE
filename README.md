@@ -4,15 +4,7 @@ STARR Code for Arduino interface with sensors and control systems. University of
 
 # Assigned Tasks:
 
-- 
-
-
-# Dont Do List:
-
-- Connect IO pin to ground
-- Connect 2 IO pins
-- When pins are output be super careful 
-- Overvolting IO pins
+-
 
 
 # Pins:
