@@ -1,49 +1,34 @@
-/*
+// SD
 
- ** MOSI - pin 11
- ** MISO - pin 12
- ** CLK - pin 13
- ** CS - pin 4
-
-*/
-
-#include <SPI.h>
+#include <flagsapi.h>
 #include <SD.h>
+#define DATASECTIONLENGTH 24
 
-File myFile;
+File dataFile;
 
-void SDsetup() {
-
-  //Serial.print("Initializing SD card...");
-
+uint16_t SDsetup() {
+  Serial.print("Initializing SD card...");
   if (!SD.begin(4)) {
-    Serial.println("initialization failed!");
-    while (1);
+    return 1;
   }
-  Serial.println("initialization done.");
+  Serial.println("Initialization done.");
+  return 0;
 }
 
 
-void SDWrite(long long value, char* file){
-    // open the file. note that only one file can be open at a time,
-    // so you have to close this one before opening another.
-    myFile = SD.open(file, FILE_WRITE);
+void SDWrite(long long int data[DATASECTIONLENGTH], String file){
 
-    // if the file opened okay, write to it:
-    if (myFile) {
-        Serial.print("Writing to test.txt...");
-        myFile.println("testing 1, 2, 3.");
-        // close the file:
-        myFile.close();
-        Serial.println("done.");
+    dataFile = SD.open(file, FILE_WRITE);
+
+    if (dataFile) {
+        Serial.print("SD WRITE");
+        for (int i = 0; i < DATASECTIONLENGTH; i++){
+          dataFile.print(data[i]);
+        }
+        dataFile.println();
+        dataFile.close();
     } else {
-        // if the file didn't open, print an error:
         Serial.println("error opening test.txt");
   }
 }
-
-
-
-
-
 
