@@ -25,7 +25,6 @@ void buzzer(int time) { // time is in 1/10 second so if time == 10 then buzz for
   	digitalWrite(buzzerPin, LOW);
 }
 
-
 void mosfetOn(int relayPin) { 
   	digitalWrite(relayPin, HIGH); 
 }

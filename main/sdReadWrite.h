@@ -3,8 +3,8 @@
 #include <flagsapi.h>
 #include <SD.h>
 #define DATASECTIONLENGTH 24
-
 File dataFile;
+
 
 uint16_t SDsetup() {
   Serial.print("Initializing SD card...");
@@ -14,7 +14,6 @@ uint16_t SDsetup() {
   Serial.println("Initialization done.");
   return 0;
 }
-
 
 void SDWrite(long long int data[DATASECTIONLENGTH], String file){
 
@@ -31,4 +30,3 @@ void SDWrite(long long int data[DATASECTIONLENGTH], String file){
         Serial.println("error opening test.txt");
   }
 }
-

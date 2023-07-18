@@ -3,10 +3,9 @@
 #include <flagsapi.h>
 #include <Adafruit_Sensor.h>
 #include "Adafruit_BME680.h"
-
 #define SEALEVELPRESSURE_HPA (1013.25)
-
 Adafruit_BME680 bme;
+
 
 uint16_t BME680Setup() {
 
@@ -20,7 +19,6 @@ uint16_t BME680Setup() {
   bme.setPressureOversampling(BME680_OS_4X);
   bme.setIIRFilterSize(BME680_FILTER_SIZE_3);
   bme.setGasHeater(320, 150); // 320*C for 150 ms
-
   return 0;
 }
 
@@ -50,6 +48,3 @@ float BME680GasRead() {
 float BME680AltitudeRead() {
   return bme.readAltitude(SEALEVELPRESSURE_HPA); // meters 
 }
-
-
-

@@ -32,10 +32,7 @@
 */
 
 
-
-
 #include <assert.h>
-
 #include "accelerometerSensor.h"
 //#include "softwareTeam.h"
 #include "magnetometerSensor.h"
@@ -45,11 +42,8 @@
 #include "tempHumiditySensor.h"
 #include "externalInt.h"
 
-unsigned long startMillis;
+unsigned long startMillis = millis();
 unsigned long currentMillis;
-
-int BattVolts = 0;
-
 dataPacket Datapacket;
 
 enum DataPosition {
@@ -58,23 +52,12 @@ enum DataPosition {
                   SPGCO2, SPGEth, SPGVTOL, SPGH2, 
                   ACCELx, ACCELy, ACCELz, GYROx, GYROy, GYROz, 
                   BMETemp, BMEAltitude, BMEPressure, 
-                  BatteryVolts, Valve1, Valve2, Valve3,
+                  Valve1, Valve2, Valve3,
                   NumberOfItems // <- to be used later for better data packet length checking 
                   };
 
 
 void sensorToSD(int newPacketBool) {
-  /*
-  
-  Packet in Cycle, Packet Identifier, Packet Data
-  valveOneTemp, valveTwoTemp, valveThreeTemp, valveFourTemp, 
-  SPGCO2, SPGEth, SPGVTOL, SPGH2, 
-  ACCELx, ACCELy, ACCELz, GYROx, GYROy, GYROz, 
-  BMETemp, BMEAltitude, BMEPressure, MISSING SOME NO? 
-  BattVolts;
-  Valve1, Valve2, Valve3;
-
-  */
 
   long long int data[NumberOfItems]; 
 
@@ -84,9 +67,6 @@ void sensorToSD(int newPacketBool) {
 
   ICMAccelerationPacket = ICM20469Accelread();
   ICMGyroPacket = ICM20469Gyroread();
-
-  
-
 
 
   data[newPacketFlag] = newPacketBool;
@@ -114,60 +94,15 @@ void sensorToSD(int newPacketBool) {
   data[GYROy] = ICMGyroPacket.y;
   data[GYROz] = ICMGyroPacket.z;
 
-  data[BatteryVolts] = BattVolts;
 
 
+  if (currentMillis % 30000) {
 
+  }
 
   SDWrite(data, "1.txt");
 
   return;
-}
-
-
-
-
-
-void VoltDataPacket(dataPacket Datapacket) {
-  if (Datapacket.type == '?') {
-      BattVolts = Datapacket.data;
-    }
-}
-
-
-
-void setup() {
-  Serial.begin(9600); // (baud of Eggtimer Quantum Alti)
-
-  // intialize pins for solenoid control 
-	pinMode(mosfetOne, OUTPUT);
-	pinMode(mosfetTwo, OUTPUT);
-	pinMode(mosfetThree, OUTPUT);
-
-	// intialize pin for buzzer control 
-	pinMode(buzzerPin, OUTPUT);
-
-  int check = 0;
-
-  check += SDsetup();
-  check += SPG30Setup();
-  check += ICM20649Setup();
-  check += LIS3MDLSetup();
-	check += BME680Setup();
-  //airflowSetupAll();
-
-  if (check != 0) {
-    buzzer(5); // half second buzz see Documentation.txt for more info
-    delay(2000);
-  }
-
-
-  BME680readingCheck();
-  SPG30readingCheck(); 
-  LIS3MDLreadingCheck();
-  ICM20649readingCheck();
-
-	startMillis = millis();  //initial start time
 }
 
 
@@ -177,6 +112,7 @@ void stateLiftoff() {
   while(1) {
     if (serialDataLeft() == 1) {
         Datapacket = serialRead();
+        //newPacket = 1;
     }
 
     if (Datapacket.type == '@') {
@@ -185,13 +121,12 @@ void stateLiftoff() {
         }
       }
 
-      // need to add a redundancy 
+    //sensorToSD(newPacket);
   }
 }
 
 void stateDescent() {
 
-  
   while(1) {
     if (serialDataLeft() == 1) {
       Datapacket = serialRead();
@@ -202,14 +137,9 @@ void stateDescent() {
       }
     }
 
-    // Now need to add all the data collection under descent 
-
-    // need to add a redundancy 
+    //sensorToSD(newPacket);
   }
 }
-
-
-
 
 void stateLanded() {
   while (1) { 
@@ -217,6 +147,45 @@ void stateLanded() {
     buzzer(5);
   }
 }
+
+
+
+
+
+
+void setup() {
+  Serial.begin(9600); // (baud of Eggtimer Quantum Alti)
+  while(!Serial); // CHECK THIS LATER ITS HERE TO MAKE SERIAL WAIT 
+
+  // intialize pins for solenoid control 
+	pinMode(mosfetOne, OUTPUT);
+	pinMode(mosfetTwo, OUTPUT);
+	pinMode(mosfetThree, OUTPUT);
+
+	// intialize pin for buzzer control 
+	pinMode(buzzerPin, OUTPUT);
+
+  
+
+  assert(SDsetup());
+  assert(SPG30Setup());
+  assert(ICM20649Setup());
+  assert(LIS3MDLSetup());
+	assert(BME680Setup());
+  //airflowSetupAll();
+
+  
+
+  BME680readingCheck();
+  SPG30readingCheck(); 
+  LIS3MDLreadingCheck();
+  ICM20649readingCheck();
+
+	startMillis = millis();  //initial start time
+}
+
+
+
 
 
 
@@ -231,12 +200,17 @@ void loop() {
       - Descent state returns meaning it has detected landing
       - Jump to landed state
     */
-    /**************************************************************************/
-  
+  /**************************************************************************/
+
+  while (1) {
+    Serial.println();
+  }
+
+
   int newPacket = 0;
 
-
   if (serialDataLeft() == 1) {
+    newPacket = 1;
     Datapacket = serialRead();
   }
   if (Datapacket.type == '@') {
@@ -244,11 +218,7 @@ void loop() {
       stateLiftoff();
     }
   }
-  
-  // add check for acceleration 
 
   sensorToSD(newPacket);
-
-
 }
 

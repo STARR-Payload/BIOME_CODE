@@ -1,14 +1,9 @@
-
-
 // LIS3MDL
-
 
 #include <flagsapi.h>
 #include <Adafruit_LIS3MDL.h>
 #include <Adafruit_Sensor.h>
-
 Adafruit_LIS3MDL lis3mdl;
-
 sensors_event_t event;
 
 

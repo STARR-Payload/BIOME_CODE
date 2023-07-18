@@ -1,9 +1,7 @@
-
 // SPG30
 
 #include <flagsapi.h>
 #include "Adafruit_SGP30.h"
-
 Adafruit_SGP30 sgp;
 
 
@@ -28,7 +26,6 @@ uint16_t SPG30Setup() {
     Serial.println("Got good baseline readings");
   }
   Serial.println("SPG30 is working");
-
   return 0;
 }
 
@@ -44,14 +41,10 @@ uint16_t SPG30readingCheck() {
 
 }
 
-
-
-
 float SPG30TVOCread() {
   sgp.IAQmeasure();
   return sgp.TVOC; // ppb
 }
-
 
 float SPG30CO2read() {
   sgp.IAQmeasure();
@@ -67,6 +60,3 @@ float SPG30ETHread() {
   sgp.IAQmeasureRaw();
   return sgp.rawEthanol; //
 }
-
-
-
