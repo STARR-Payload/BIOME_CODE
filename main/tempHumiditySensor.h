@@ -1,53 +1,50 @@
 // BME680
 
-#include <Wire.h>
-#include <SPI.h>
+#include <flagsapi.h>
 #include <Adafruit_Sensor.h>
 #include "Adafruit_BME680.h"
-
 #define SEALEVELPRESSURE_HPA (1013.25)
-
 Adafruit_BME680 bme;
 
-void bmesetup() {
 
-  
+uint16_t BME680Setup() {
+
   if (!bme.begin()) {
-    Serial.println("Could not find a valid BME680 sensor, something is wrong");
-    while (1);
+    return 1;
   } 
+  
   Serial.println("BME is working");
   bme.setTemperatureOversampling(BME680_OS_8X);
   bme.setHumidityOversampling(BME680_OS_2X);
   bme.setPressureOversampling(BME680_OS_4X);
   bme.setIIRFilterSize(BME680_FILTER_SIZE_3);
   bme.setGasHeater(320, 150); // 320*C for 150 ms
+  return 0;
 }
 
-static void bmereadingcheck() {
+uint16_t BME680readingCheck() {
   if (! bme.performReading()) {
     Serial.println("Failed read, something is wrong");
-    return;
-  }
+    return 1;
+  } else return 0;
 }
 
-float bmeTemp(){
-  return bme.temperature; // C
+float BME680TempRead(){
+  return bme.readTemperature(); // C
 }
 
-float bmePressure() {
-  return bme.pressure / 100.0; // hPa
+float BME680PressureRead() {
+  return bme.readPressure() / 100.0; // hPa
 }
 
-float bmehumdity(){
-  return bme.humidity; // %
+float BME680humdityRead(){
+  return bme.readHumidity(); // %
 }
 
-float bmeGas() {
-  return bme.gas_resistance / 1000.0; // KOhms
+float BME680GasRead() {
+  return bme.readGas() / 1000.0; // KOhms
 }
 
-float bmeAlti() {
+float BME680AltitudeRead() {
   return bme.readAltitude(SEALEVELPRESSURE_HPA); // meters 
 }
-

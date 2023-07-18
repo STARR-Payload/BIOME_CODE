@@ -32,7 +32,7 @@
 */
 
 
-
+#include <assert.h>
 #include "accelerometerSensor.h"
 //#include "softwareTeam.h"
 #include "magnetometerSensor.h"
@@ -40,90 +40,146 @@
 #include "sdReadWrite.h"
 #include "serialData.h"
 #include "tempHumiditySensor.h"
+#include "externalInt.h"
 
-
-int buzzerPin = 7;
-int relayOne = 6;
-int relayTwo = 8;
-int relayThree = 9;
-int outletTempSensorOne = 2;
-int outletTempSensorTwo = 3;
-int outletTempSensorThree = 4;
-int outletTempSensorFour = 5;
-
-int magnetometerAddress = 0x1C;
-int airQualityAddress = 0x58;
-int accelerometerAddress = 0x68;
-int tempPressureHumidityGasAddress = 0x77;
-
-unsigned long startMillis;
+unsigned long startMillis = millis();
 unsigned long currentMillis;
+dataPacket Datapacket;
 
-void buzzer(int time) { // time is in 1/10 second so if time == 10 then buzz for 1 sec
-  	digitalWrite(buzzerPin, HIGH);
-  	delay(time * 100);
-  	digitalWrite(buzzerPin, LOW);
-}
+enum DataPosition {
+                  newPacketFlag = 0, PacketIdentity, PacketData,
+                  valveOneTemp, valveTwoTemp, valveThreeTemp, valveFourTemp, 
+                  SPGCO2, SPGEth, SPGVTOL, SPGH2, 
+                  ACCELx, ACCELy, ACCELz, GYROx, GYROy, GYROz, 
+                  BMETemp, BMEAltitude, BMEPressure, 
+                  Valve1, Valve2, Valve3,
+                  NumberOfItems // <- to be used later for better data packet length checking 
+                  };
 
-int voltCheck() {
+
+void sensorToSD(int newPacketBool) {
+
+  long long int data[NumberOfItems]; 
+
+  sensors_vec_t ICMAccelerationPacket;
+  sensors_vec_t ICMGyroPacket;
+
+
+  ICMAccelerationPacket = ICM20469Accelread();
+  ICMGyroPacket = ICM20469Gyroread();
+
+
+  data[newPacketFlag] = newPacketBool;
+  data[PacketIdentity] = Datapacket.type;
+  data[PacketData] = Datapacket.data;
+
+
+  data[BMETemp] = BME680TempRead();
+  data[BMEAltitude] = BME680AltitudeRead();
+  data[BMEPressure] = BME680PressureRead();
+
+
+  data[SPGCO2] = SPG30CO2read();
+  data[SPGEth] = SPG30ETHread();
+  data[SPGVTOL] = SPG30TVOCread();
+  data[SPGH2] = SPG30H2read();
+
+
+  data[ACCELx] = ICMAccelerationPacket.x;
+  data[ACCELy] = ICMAccelerationPacket.y;
+  data[ACCELz] = ICMAccelerationPacket.z;
+
+
+  data[GYROx] = ICMGyroPacket.x;
+  data[GYROy] = ICMGyroPacket.y;
+  data[GYROz] = ICMGyroPacket.z;
+
+
+
+  if (currentMillis % 30000) {
+
+  }
+
+  SDWrite(data, "1.txt");
+
   return;
 }
 
-void relayOn(int relayPin) { 
-  	digitalWrite(relayPin, HIGH); 
-}
 
-void relayOff(int relayPin) {
-  	digitalWrite(relayPin, LOW);
-}
-
-void dataToSD() {
+void stateLiftoff() {
 
 
-
-  //valveOneTemp, valveTwoTemp, valveThreeTemp, valveFourTemp, SGPCO2, SGPEth, SGPVTOL, SGPH2, ACCELx, ACCELy, ACCELz, GYROx, GYROy, GYROz, BMETemp, BMEAltitude, BMEPressure, BattVolts;
-  //RELAY1, RELAY2, RELAY3;
-
-
-}
-
-void dataLoop(dataPacket Datapacket) { // here when we reach nose over
-
-
-  if (Datapacket.type == '@') {
-    if (Datapacket.data == 9) { // we have landed... One small step for man one giant leap for some stupid uni kids
-      return;
+  while(1) {
+    if (serialDataLeft() == 1) {
+        Datapacket = serialRead();
+        //newPacket = 1;
     }
+
+    if (Datapacket.type == '@') {
+        if (Datapacket.data == 5) { // nose over is detected leave liftoff state
+          
+        }
+      }
+
+    //sensorToSD(newPacket);
   }
-  return; // temp so we actually exit 
 }
+
+void stateDescent() {
+
+  while(1) {
+    if (serialDataLeft() == 1) {
+      Datapacket = serialRead();
+    }
+    if (Datapacket.type == '@') {
+      if (Datapacket.data == 9) { // we have landed... One small step for man one giant leap for some stupid uni kids
+        stateLanded();
+      }
+    }
+
+    //sensorToSD(newPacket);
+  }
+}
+
+void stateLanded() {
+  while (1) { 
+    delay(10000);
+    buzzer(5);
+  }
+}
+
+
 
 
 
 
 void setup() {
-  Serial.begin(9600); // <- going to need work (serial rate of alti)
-	
-  SDsetup();
-  accelsetup(); // needs serial baud rate flushing
-  gassetup();
-  magsetup();
-	bmesetup();
+  Serial.begin(9600); // (baud of Eggtimer Quantum Alti)
+  while(!Serial); // CHECK THIS LATER ITS HERE TO MAKE SERIAL WAIT 
 
-
-
-  bmereadingcheck();
-
-  
-
-
-	// intialize pins for solenoid control 
-	pinMode(relayOne, OUTPUT);
-	pinMode(relayTwo, OUTPUT);
-	pinMode(relayThree, OUTPUT);
+  // intialize pins for solenoid control 
+	pinMode(mosfetOne, OUTPUT);
+	pinMode(mosfetTwo, OUTPUT);
+	pinMode(mosfetThree, OUTPUT);
 
 	// intialize pin for buzzer control 
 	pinMode(buzzerPin, OUTPUT);
+
+  
+
+  assert(SDsetup());
+  assert(SPG30Setup());
+  assert(ICM20649Setup());
+  assert(LIS3MDLSetup());
+	assert(BME680Setup());
+  //airflowSetupAll();
+
+  
+
+  BME680readingCheck();
+  SPG30readingCheck(); 
+  LIS3MDLreadingCheck();
+  ICM20649readingCheck();
 
 	startMillis = millis();  //initial start time
 }
@@ -131,48 +187,38 @@ void setup() {
 
 
 
+
+
 void loop() {
-	
-  dataPacket Datapacket;
-  //float valveOneTemp, valveTwoTemp, valveThreeTemp, valveFourTemp, SGPCO2, SGPEth, SGPVTOL, SGPH2, ACCELx, ACCELy, ACCELz, GYROx, GYROy, GYROz, BMETemp, BMEAltitude, BMEPressure, BattVolts;
-  //int RELAY1, RELAY2, RELAY3;
+	/**************************************************************************/
+    /*
+    Control Flow:
+     - Continiously check for packet then log data until launch is detected 
+      - Jump to launch state
+      - Launch state returns meaning it has detected descent
+      - Jump to descent state
+      - Descent state returns meaning it has detected landing
+      - Jump to landed state
+    */
+  /**************************************************************************/
+
+  while (1) {
+    Serial.println();
+  }
 
 
+  int newPacket = 0;
 
-	// code to loop until we have launch conditions
-	while(1) {
-    if (serialDataLeft() == 1) {
-      Datapacket = serialRead();
-    }
-    if (Datapacket.type == '@') {
-      if (Datapacket.data == 2) { // we have launched 
-        break;
-      }
-    }
-		// get accelerometer reading from sensor 
-    break; // temp so it doesnt keep looping 
-	}
-	
-
-
-  if (serialDataLeft() == 1) { // keep reading packets until we get nose over
+  if (serialDataLeft() == 1) {
+    newPacket = 1;
     Datapacket = serialRead();
   }
-
-
-
   if (Datapacket.type == '@') {
-    if (Datapacket.data == 5) { // we have nose over start data collection loop
-      dataLoop(Datapacket); // should prob make a new packet in dataloop no? 
+    if (Datapacket.data == 2) { // off to see the wizard
+      stateLiftoff();
     }
   }
 
-
-  // here once we landed 
-  while (1) {
-    delay(10000);
-    buzzer(5);
-  }
-	
+  sensorToSD(newPacket);
 }
 
