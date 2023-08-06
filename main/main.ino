@@ -34,7 +34,7 @@
 
 #include <assert.h>
 #include "accelerometerSensor.h"
-//#include "softwareTeam.h"
+#include "softwareTeam.h"
 #include "magnetometerSensor.h"
 #include "gasSensor.h"
 #include "sdReadWrite.h"
@@ -115,11 +115,9 @@ void stateDescent() {
 }
 
 void stateLanded() {
-  while (1) { 
-    delay(10000);
-    buzzer(5);
-  }
+
 }
+
 
 
 
@@ -138,21 +136,24 @@ void setup() {
 	// intialize pin for buzzer control 
 	pinMode(buzzerPin, OUTPUT);
 
+
+
+
+  //assert(SDsetup());
+  //assert(SPG30Setup());
+  //assert(ICM20649Setup());
+  //assert(LIS3MDLSetup());
+	//assert(BME680Setup());
+  airflowSetupAll();
+
   
 
-  assert(SDsetup());
-  assert(SPG30Setup());
-  assert(ICM20649Setup());
-  assert(LIS3MDLSetup());
-	assert(BME680Setup());
-  //airflowSetupAll();
+  //BME680readingCheck();
+  //SPG30readingCheck(); 
+  //LIS3MDLreadingCheck();
+  //ICM20649readingCheck();
 
-  
 
-  BME680readingCheck();
-  SPG30readingCheck(); 
-  LIS3MDLreadingCheck();
-  ICM20649readingCheck();
 
 	startMillis = millis();  //initial start time
 }
@@ -175,14 +176,16 @@ void loop() {
     */
   /**************************************************************************/
 
-  while (1) {
-    Serial.println();
-  }
+
+  Serial.println(airflowTemp(1));
+  Serial.println(airflowTemp(2));
+  Serial.println(airflowTemp(3));
+  Serial.println(airflowTemp(4));
 
 
 
 
   
 
-  sensorToSD();
+  //sensorToSD();
 }

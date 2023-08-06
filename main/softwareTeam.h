@@ -1,5 +1,8 @@
+#include "Arduino.h"
 #include <OneWire.h>
 #include <DallasTemperature.h>
+
+void airflowSetup(int valveNumber);
 
 // Define precision of recorded temperature in bits.
 // Ranges from 9 to 12 bits, with 12 corresponsing to 
