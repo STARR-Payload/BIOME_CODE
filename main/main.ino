@@ -47,8 +47,8 @@ unsigned long currentMillis;
 dataPacket Datapacket;
 
 enum DataPosition {
-                  newPacketFlag = 0, PacketIdentity, PacketData,
-                  valveOneTemp, valveTwoTemp, valveThreeTemp, valveFourTemp, 
+                  
+                  valveOneTemp = 0, valveTwoTemp, valveThreeTemp, valveFourTemp, 
                   SPGCO2, SPGEth, SPGVTOL, SPGH2, 
                   ACCELx, ACCELy, ACCELz, GYROx, GYROy, GYROz, 
                   BMETemp, BMEAltitude, BMEPressure, 
@@ -57,7 +57,7 @@ enum DataPosition {
                   };
 
 
-void sensorToSD(int newPacketBool) {
+void sensorToSD() {
 
   long long int data[NumberOfItems]; 
 
@@ -69,9 +69,9 @@ void sensorToSD(int newPacketBool) {
   ICMGyroPacket = ICM20469Gyroread();
 
 
-  data[newPacketFlag] = newPacketBool;
-  data[PacketIdentity] = Datapacket.type;
-  data[PacketData] = Datapacket.data;
+  //data[newPacketFlag] = newPacketBool;
+  //data[PacketIdentity] = Datapacket.type;
+  //data[PacketData] = Datapacket.data;
 
 
   data[BMETemp] = BME680TempRead();
@@ -108,37 +108,10 @@ void sensorToSD(int newPacketBool) {
 
 void stateLiftoff() {
 
-
-  while(1) {
-    if (serialDataLeft() == 1) {
-        Datapacket = serialRead();
-        //newPacket = 1;
-    }
-
-    if (Datapacket.type == '@') {
-        if (Datapacket.data == 5) { // nose over is detected leave liftoff state
-          
-        }
-      }
-
-    //sensorToSD(newPacket);
-  }
 }
 
 void stateDescent() {
 
-  while(1) {
-    if (serialDataLeft() == 1) {
-      Datapacket = serialRead();
-    }
-    if (Datapacket.type == '@') {
-      if (Datapacket.data == 9) { // we have landed... One small step for man one giant leap for some stupid uni kids
-        stateLanded();
-      }
-    }
-
-    //sensorToSD(newPacket);
-  }
 }
 
 void stateLanded() {
@@ -207,18 +180,9 @@ void loop() {
   }
 
 
-  int newPacket = 0;
 
-  if (serialDataLeft() == 1) {
-    newPacket = 1;
-    Datapacket = serialRead();
-  }
-  if (Datapacket.type == '@') {
-    if (Datapacket.data == 2) { // off to see the wizard
-      stateLiftoff();
-    }
-  }
 
-  sensorToSD(newPacket);
+  
+
+  sensorToSD();
 }
-
