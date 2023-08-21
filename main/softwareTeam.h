@@ -1,4 +1,3 @@
-#include "Arduino.h"
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
@@ -8,7 +7,7 @@ void airflowSetup(int valveNumber);
 // Ranges from 9 to 12 bits, with 12 corresponsing to 
 // 4 decimal places and 9 corresponding to 1 decimal place.
 enum Precision {minPrec = 9, lowPrec = 10, highPrec = 11, maxPrec = 12};
-int tempPrecision = maxPrec;
+int tempPrecision = lowPrec;
 
 // Define i/o pins for valves (index 0 corresponds to valve 1's pin and so forth)
 OneWire sensorPins[] = {6, 5, 3, 2};

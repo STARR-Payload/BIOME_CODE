@@ -2,3 +2,4 @@
 build/
 .vscode/
 .arduino.json
+main/.theia/launch.json

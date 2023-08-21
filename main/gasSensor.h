@@ -17,15 +17,14 @@ uint16_t SPG30Setup() {
     return 1;
   }
   
-  for (int i = 0; i++; i < 30) {
-    uint16_t TVOC_base, eCO2_base;
-    if (! sgp.getIAQBaseline(&eCO2_base, &TVOC_base)) {
-      Serial.println("Failed to get baseline readings");
-      return 1;
-    }
-    Serial.println("Got good baseline readings");
+  uint16_t TVOC_base, eCO2_base;
+  if (! sgp.getIAQBaseline(&eCO2_base, &TVOC_base)) {
+    Serial.println("Failed to get baseline readings");
+    return 1;
+  Serial.println("Got good baseline readings");
   }
-  Serial.println("SPG30 is working");
+  Serial.println("SPG30 Found!");
+  Serial.println();
   return 0;
 }
 
@@ -38,7 +37,6 @@ uint16_t SPG30readingCheck() {
     Serial.println("Raw Measurement failed");
     return 1;
   } else return 0;
-
 }
 
 float SPG30TVOCread() {

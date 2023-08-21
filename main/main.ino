@@ -31,102 +31,159 @@
 
 */
 
-
 #include <assert.h>
 #include "accelerometerSensor.h"
 #include "softwareTeam.h"
 #include "magnetometerSensor.h"
 #include "gasSensor.h"
 #include "sdReadWrite.h"
-#include "serialData.h"
 #include "tempHumiditySensor.h"
 #include "externalInt.h"
+#include "timer.h"
+#include "conv.h"
 
-unsigned long startMillis = millis();
-unsigned long currentMillis;
-dataPacket Datapacket;
+unsigned long startMillis;
+int currentValve = 0; 
+int currentThirdyInterval = 1;
+Timer timerThirdy;
+Timer timerToApogee;
+Timer timerUnderMain; 
+int check;
+int mosfetList[] = {mosfetOne, mosfetTwo, mosfetThree};
+float currentAccelVector = 0;
+struct Queue myQueue = {0, 0, 5}; // front, rear, size
+sensors_vec_t ICMAccelerationPacket;
+sensors_vec_t ICMGyroPacket;
+float data[DATASECTIONLENGTH]; 
+
+void valveDeploy() {
+  switch (currentValve) {
+    case 0:
+      Serial.println("Valve 1 Open");
+      mosfetOn(mosfetOne);
+      break;
+
+    case 1:
+      Serial.println("Valve 2 Open, Valve 1 Closed");
+      mosfetOff(mosfetOne);
+      mosfetOn(mosfetTwo);
+      break;
+
+    case 2:
+      Serial.println("Valve 3 Open, Valve 2 Closed");
+      mosfetOff(mosfetTwo);
+      mosfetOn(mosfetThree);
+      break;
+
+    case 3:
+      Serial.println("Valve 3 Closed");
+      mosfetOff(mosfetThree);
+      stateMainDeploy();
+      break;
+  }
+  currentValve++;
+}
 
 enum DataPosition {
-                  
-                  valveOneTemp = 0, valveTwoTemp, valveThreeTemp, valveFourTemp, 
+                  elapsedTime = 0,
+                  valveOneTemp, valveTwoTemp, valveThreeTemp, valveFourTemp, 
                   SPGCO2, SPGEth, SPGVTOL, SPGH2, 
                   ACCELx, ACCELy, ACCELz, GYROx, GYROy, GYROz, 
-                  BMETemp, BMEAltitude, BMEPressure, 
-                  Valve1, Valve2, Valve3,
-                  NumberOfItems // <- to be used later for better data packet length checking 
+                  BMETemp, BMEHumidity, BMEPressure, 
+                  LIS3MDLcoorX, LIS3MDLcoorY, LIS3MDLcoorZ,
+                  Valve,
                   };
 
+void sensorToSD() { // half a second to run now 
 
-void sensorToSD() {
-
-  long long int data[NumberOfItems]; 
-
-  sensors_vec_t ICMAccelerationPacket;
-  sensors_vec_t ICMGyroPacket;
-
+  data[elapsedTime] = millis() - startMillis;
 
   ICMAccelerationPacket = ICM20469Accelread();
   ICMGyroPacket = ICM20469Gyroread();
 
+  bme.performReading();
 
-  //data[newPacketFlag] = newPacketBool;
-  //data[PacketIdentity] = Datapacket.type;
-  //data[PacketData] = Datapacket.data;
-
-
-  data[BMETemp] = BME680TempRead();
-  data[BMEAltitude] = BME680AltitudeRead();
-  data[BMEPressure] = BME680PressureRead();
-
+  data[valveOneTemp] = airflowTemp(1);
+  data[valveTwoTemp] = airflowTemp(2);
+  data[valveThreeTemp] = airflowTemp(3);
+  data[valveFourTemp] = airflowTemp(4);
 
   data[SPGCO2] = SPG30CO2read();
   data[SPGEth] = SPG30ETHread();
   data[SPGVTOL] = SPG30TVOCread();
   data[SPGH2] = SPG30H2read();
 
-
   data[ACCELx] = ICMAccelerationPacket.x;
   data[ACCELy] = ICMAccelerationPacket.y;
   data[ACCELz] = ICMAccelerationPacket.z;
-
 
   data[GYROx] = ICMGyroPacket.x;
   data[GYROy] = ICMGyroPacket.y;
   data[GYROz] = ICMGyroPacket.z;
 
+  data[BMETemp] = bme.temperature;  // SLOWWWWW
+  data[BMEPressure] = bme.pressure; // SLOWWWWW
+  data[BMEHumidity] = bme.humidity; // SLOWWWWW
 
+  data[LIS3MDLcoorX] = LIS3MDLReadX();
+  data[LIS3MDLcoorY] = LIS3MDLReadY();
+  data[LIS3MDLcoorZ] = LIS3MDLReadZ();
 
-  if (currentMillis % 30000) {
+  data[Valve] = currentValve; 
 
-  }
-
-  SDWrite(data, "1.txt");
-
-  return;
+  SDWrite(data, "PayloadData.txt");
+  
 }
 
 
 void stateLiftoff() {
-
+  Serial.println("OFF TO SEE THE WIZARD!!!");
+  timerToApogee.start();
+  while (1) {
+    timerToApogee.update();
+    sensorToSD();
+  }
 }
+
 
 void stateDescent() {
+  Serial.println("DESCENT!!!!");
+  timerToApogee.stop(); 
+  valveDeploy();
+  timerThirdy.start();
+
+  while (1) {
+    timerThirdy.update();
+    sensorToSD();
+  }
 
 }
+
+void stateMainDeploy() {
+  Serial.println("MAIN DEPLOY!!!");
+  timerThirdy.stop();
+  timerUnderMain.start();
+  
+  while (1) {
+    timerUnderMain.update();
+    sensorToSD();
+  }
+}
+
 
 void stateLanded() {
-
+  timerUnderMain.stop();
+  Serial.println("PLEASE CRANK THE SILLY THING AROUND");
+  Serial.println("TIME TO GO TO SLEEP ILL MISS YOU :(");
+  while (1) decoder();
 }
-
-
-
-
-
 
 
 void setup() {
-  Serial.begin(9600); // (baud of Eggtimer Quantum Alti)
-  while(!Serial); // CHECK THIS LATER ITS HERE TO MAKE SERIAL WAIT 
+  Serial.begin(9600);
+  delay(5000);
+  Serial.println("\n \n \n \n \t \t \t NEW LOAD");
+
 
   // intialize pins for solenoid control 
 	pinMode(mosfetOne, OUTPUT);
@@ -137,55 +194,91 @@ void setup() {
 	pinMode(buzzerPin, OUTPUT);
 
 
-
-
-  //assert(SDsetup());
-  //assert(SPG30Setup());
-  //assert(ICM20649Setup());
-  //assert(LIS3MDLSetup());
-	//assert(BME680Setup());
+  check += SDsetup();
+  check += SPG30Setup();
+  check += BME680Setup();
+  check += ICM20649Setup();
+  check += LIS3MDLSetup();
   airflowSetupAll();
 
+  Serial.println("");
+  Serial.println("**************************************************************************");
+  Serial.println("SETUP CHECK");
+  assert(!check);
+  Serial.println("SETUP PASSED");
+  Serial.println("**************************************************************************");
+
+  check += SPG30readingCheck();
+  check += BME680readingCheck(); 
+  check += ICM20649readingCheck();
+  check += LIS3MDLreadingCheck();
   
+  Serial.println("READING CHECK");
+  assert(!check);
+  Serial.println("READING PASSED");
+  Serial.println("**************************************************************************");
 
-  //BME680readingCheck();
-  //SPG30readingCheck(); 
-  //LIS3MDLreadingCheck();
-  //ICM20649readingCheck();
+
+  Serial.println("TIMER SETUP");
+  timerThirdy.setInterval(30000, 3); // 30000 = 30 Seconds
+  timerThirdy.setCallback(valveDeploy);
+  timerToApogee.setTimeout(22000); // 22000 = 22 Seconds
+  timerToApogee.setCallback(stateDescent);
+  timerUnderMain.setTimeout(300000); // ASK FOR TIME UNDER        CURRENTLY I HAVE IT AT 5 mins 
+  timerUnderMain.setCallback(stateLanded);
+  Serial.println("TIMER PASSED");
+  Serial.println("**************************************************************************");
 
 
+  Serial.println("DUMMY DATA TEST (WILL TAKE A FEW SECONDS)");
+  for (int i = 0; i < 150; i++) {
+    currentAccelVector = ICM20469NormVector();
+    push(&myQueue,currentAccelVector);
+  }
+  for (int i = 0; i < 10; i++) {
+    ICMAccelerationPacket = ICM20469Accelread();
+    ICMGyroPacket = ICM20469Gyroread();
+    bme.performReading();
+    SPG30CO2read();
+    SPG30ETHread();
+    SPG30TVOCread();
+    SPG30H2read();
+    ICMAccelerationPacket.x;
+    ICMAccelerationPacket.y;
+    ICMAccelerationPacket.z;
+    ICMGyroPacket.x;
+    ICMGyroPacket.y;
+    ICMGyroPacket.z;
+    bme.temperature; 
+    bme.pressure;
+    bme.humidity;
+    LIS3MDLReadX();
+    LIS3MDLReadY();
+    LIS3MDLReadZ();
+    airflowTemp(1);
+    airflowTemp(2);
+    airflowTemp(3);
+    airflowTemp(4);
+  }
+  Serial.println("DUMMY DATA PASS");
+  Serial.println("**************************************************************************");
+
+  Serial.println("\n \n \n \n \t \t \t WE ARE READY FOR LAUNCH");
 
 	startMillis = millis();  //initial start time
 }
 
-
-
-
-
-
 void loop() {
-	/**************************************************************************/
-    /*
-    Control Flow:
-     - Continiously check for packet then log data until launch is detected 
-      - Jump to launch state
-      - Launch state returns meaning it has detected descent
-      - Jump to descent state
-      - Descent state returns meaning it has detected landing
-      - Jump to landed state
-    */
-  /**************************************************************************/
 
+  Serial.println("In Main Loop"); // REMOVE BEFORE FLIGHT
 
-  Serial.println(airflowTemp(1));
-  Serial.println(airflowTemp(2));
-  Serial.println(airflowTemp(3));
-  Serial.println(airflowTemp(4));
+  currentAccelVector = ICM20469NormVector();
+  push(&myQueue,currentAccelVector);
 
-
-
-
+  stateLiftoff(); // FOR TESTING ONLY REMOVE BEFORE FLIGHT
   
-
-  //sensorToSD();
+  //if (launchDetecter(myQueue.data)) {
+  //  stateLiftoff();
+  //}
+  
 }

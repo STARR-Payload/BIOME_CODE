@@ -1,32 +1,40 @@
-// SD
-
 #include <flagsapi.h>
 #include <SD.h>
 #define DATASECTIONLENGTH 24
-File dataFile;
-
+File myFile;
 
 uint16_t SDsetup() {
-  Serial.print("Initializing SD card...");
   if (!SD.begin(4)) {
     return 1;
   }
-  Serial.println("Initialization done.");
+  Serial.println("SD Found!");
+  Serial.println("");
   return 0;
 }
 
-void SDWrite(long long int data[DATASECTIONLENGTH], String file){
+void SDWrite(float data[DATASECTIONLENGTH], String file) { // DONE
+  /* Params: 
+  1) data array that contains all sensor data for that interval
+  2) file object to write too
 
-    dataFile = SD.open(file, FILE_WRITE);
+  Function:
+  1) 
 
-    if (dataFile) {
-        Serial.print("SD WRITE");
-        for (int i = 0; i < DATASECTIONLENGTH; i++){
-          dataFile.print(data[i]);
-        }
-        dataFile.println();
-        dataFile.close();
-    } else {
-        Serial.println("error opening test.txt");
+  Return:
+  1) VOID
+  */
+
+  myFile = SD.open(file, FILE_WRITE);
+
+  for (int i = 0; i < DATASECTIONLENGTH; i++) {
+    if (i == 0) { 
+      myFile.println(data[i]);
+      } else { 
+      myFile.print(","); 
+      myFile.print(data[i]);
+    }
   }
+  // close the file:
+  myFile.close();
+       
 }

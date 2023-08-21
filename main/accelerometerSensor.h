@@ -6,7 +6,6 @@
 
 
 Adafruit_ICM20649 icm;
-uint16_t measurement_delay_us = 65535; // Delay between measurements for testing
 sensors_event_t accel;
 sensors_event_t gyro;
 sensors_event_t temp;
@@ -20,7 +19,7 @@ uint16_t ICM20649Setup(void) {
 
   Serial.println("ICM20649 Found!");
 
-  icm.setAccelRange(ICM20649_ACCEL_RANGE_16_G); 
+  icm.setAccelRange(ICM20649_ACCEL_RANGE_30_G); 
     
   icm.setGyroRange(ICM20649_GYRO_RANGE_500_DPS); 
   
@@ -40,11 +39,13 @@ uint16_t ICM20649Setup(void) {
   Serial.print("Gyro data rate (Hz) is approximately: ");
   Serial.println(gyro_rate);
   Serial.println();
+  
+
   return 0;
 }
 
 uint16_t ICM20649readingCheck() {
-  return icm.getEvent(&accel, &gyro, &temp);
+  return !(icm.getEvent(&accel, &gyro, &temp));
 }
 
 sensors_vec_t ICM20469Accelread() {
@@ -60,4 +61,10 @@ sensors_vec_t ICM20469Gyroread() {
 float ICM20469Tempread() {
   icm.getEvent(&accel, &gyro, &temp);
   return temp.temperature;
+}
+
+float ICM20469NormVector() {
+  icm.getEvent(&accel, &gyro, &temp);
+  return accel.acceleration.x + accel.acceleration.y + accel.acceleration.z;
+
 }

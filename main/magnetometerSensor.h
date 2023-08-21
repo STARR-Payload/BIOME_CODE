@@ -1,11 +1,11 @@
 // LIS3MDL
 
+#include "HardwareSerial.h"
 #include <flagsapi.h>
 #include <Adafruit_LIS3MDL.h>
 #include <Adafruit_Sensor.h>
 Adafruit_LIS3MDL lis3mdl;
 sensors_event_t event;
-
 
 uint16_t LIS3MDLSetup(void) {
   
@@ -50,6 +50,7 @@ uint16_t LIS3MDLSetup(void) {
     case LIS3MDL_DATARATE_560_HZ: Serial.println("560 Hz"); break;
     case LIS3MDL_DATARATE_1000_HZ: Serial.println("1000 Hz"); break;
   }
+  Serial.println();
 
   lis3mdl.setRange(LIS3MDL_RANGE_4_GAUSS);  // most accurate one possible
   lis3mdl.setIntThreshold(500);
@@ -61,14 +62,9 @@ uint16_t LIS3MDLSetup(void) {
   return 0;
 }
 
-
-
 uint16_t LIS3MDLreadingCheck() {
-  return lis3mdl.getEvent(&event);
+  return !(lis3mdl.getEvent(&event));
 }
-
-
-
 
 float LIS3MDLReadX() {  // return a float value of the magentic field strength in the X direction 
   lis3mdl.read();
@@ -84,5 +80,3 @@ float LIS3MDLReadZ() {  // return a float value of the magentic field strength i
   lis3mdl.read();
   return lis3mdl.z;  
 }
-
-

@@ -13,7 +13,8 @@ uint16_t BME680Setup() {
     return 1;
   } 
   
-  Serial.println("BME is working");
+  Serial.println("BME Found!");
+  Serial.println();
   bme.setTemperatureOversampling(BME680_OS_8X);
   bme.setHumidityOversampling(BME680_OS_2X);
   bme.setPressureOversampling(BME680_OS_4X);
@@ -23,28 +24,30 @@ uint16_t BME680Setup() {
 }
 
 uint16_t BME680readingCheck() {
-  if (! bme.performReading()) {
-    Serial.println("Failed read, something is wrong");
-    return 1;
-  } else return 0;
+  return 0;
 }
 
 float BME680TempRead(){
-  return bme.readTemperature(); // C
+  //bme.performReading();
+  return bme.temperature; // C
 }
 
 float BME680PressureRead() {
-  return bme.readPressure() / 100.0; // hPa
+  bme.performReading();
+  return bme.pressure / 100.0; // hPa
 }
 
 float BME680humdityRead(){
-  return bme.readHumidity(); // %
+  bme.performReading();
+  return bme.humidity; // %
 }
 
 float BME680GasRead() {
-  return bme.readGas() / 1000.0; // KOhms
+  bme.performReading();
+  return bme.gas_resistance / 1000.0; // KOhms
 }
 
 float BME680AltitudeRead() {
+  bme.performReading();
   return bme.readAltitude(SEALEVELPRESSURE_HPA); // meters 
 }

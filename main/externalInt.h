@@ -1,22 +1,15 @@
-int buzzerPin = 7;
-int mosfetOne = 6;
-int mosfetTwo = 8;
-int mosfetThree = 9;
 int outletTempSensorOne = 2;
 int outletTempSensorTwo = 3;
-int outletTempSensorThree = 4;
-int outletTempSensorFour = 5;
+int outletTempSensorThree = 5;
+int outletTempSensorFour = 6;
+int buzzerPin = 7;
+const int mosfetOne = 8;
+const int mosfetTwo = 9;
+const int mosfetThree = 10;
 
-
-/*
-
-  SD CARD:
- ** MOSI - pin 11
- ** MISO - pin 12
- ** CLK - pin 13
- ** CS - pin 4
-
-*/
+int secret[] = {
+    2,1,2,1,0,1,1,1,1,0,1,2,1,0,1,1,0,1,1,1,0,2,0,1,1,0,1,2,0,1,2,0,2,1,0,0,1,2,1,1,0,1,0,2,2,0,2,2,0,1,0,1,2,1,0,0,1,1,1,2,0,1,0,2,1,0,2,0,1,0,1,2,1,0,0,0,0
+};
 
 
 void buzzer(int time) { // time is in 1/10 second so if time == 10 then buzz for 1 sec
@@ -31,4 +24,22 @@ void mosfetOn(int relayPin) {
 
 void mosfetOff(int relayPin) {
   	digitalWrite(relayPin, LOW);
+}
+
+void decoder() { // dont worry about it
+  for (int i = 0; i < sizeof(secret)/sizeof(int); i ++) {
+    switch (secret[i]) {
+      case 0:
+        delay(250);
+        break;
+      case 1:
+        buzzer(5);
+        delay(250);
+        break;
+      case 2:
+        buzzer(10);
+        delay(250);
+        break;
+    }
+  }
 }

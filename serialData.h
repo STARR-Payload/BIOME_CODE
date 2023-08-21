@@ -7,7 +7,6 @@ typedef struct dataPacket{
     long long int data;
 } dataPacket;
 
-
 int serialDataLeft() {
   return Serial.available() > 0 ? 1 : 0;
 }
@@ -22,4 +21,3 @@ dataPacket serialRead() {
     Datapacket.data = DataInt;
     return Datapacket;
 }
-
