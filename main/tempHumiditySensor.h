@@ -27,8 +27,9 @@ uint16_t BME680readingCheck() {
   return 0;
 }
 
+/*
 float BME680TempRead(){
-  //bme.performReading();
+  bme.performReading();
   return bme.temperature; // C
 }
 
@@ -51,3 +52,4 @@ float BME680AltitudeRead() {
   bme.performReading();
   return bme.readAltitude(SEALEVELPRESSURE_HPA); // meters 
 }
+*/

@@ -1,6 +1,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
+
 void airflowSetup(int valveNumber);
 
 // Define precision of recorded temperature in bits.
@@ -21,34 +22,34 @@ int isIni[numOfSensors] = {0};
 
 // Initializes all valve sensors
 void airflowSetupAll() {
-    Serial.println("Initializing all valve sensors...");
-    for (int i = 1; i <= numOfSensors; i++) {
-        airflowSetup(i);
-    }
-    Serial.println("All valve sensors are initialized.");
+  Serial.println("Initializing all valve sensors...");
+  for (int i = 1; i <= numOfSensors; i++) {
+      airflowSetup(i);
+  }
+  Serial.println("All valve sensors are initialized.");
 }
 
 // Initializes individual valve sensors
 void airflowSetup(int valveNumber) {
-    Serial.print("Initializing valve " + String(valveNumber) + ": ");
+  Serial.print("Initializing valve " + String(valveNumber) + ": ");
 
-    // Initialize sensor if it hasn't been already
-    int index = valveNumber-1;
-    if (!isIni[index]) {
-        DeviceAddress deviceAddress;
+  // Initialize sensor if it hasn't been already
+  int index = valveNumber-1;
+  if (!isIni[index]) {
+      DeviceAddress deviceAddress;
 
-        sensors[index].setOneWire(&sensorPins[index]);
-        sensors[index].begin();
-        if (sensors[index].getAddress(deviceAddress, 0)) sensors[index].setResolution(deviceAddress, tempPrecision);
-        isIni[index] = 1;
-    }
+      sensors[index].setOneWire(&sensorPins[index]);
+      sensors[index].begin();
+      if (sensors[index].getAddress(deviceAddress, 0)) sensors[index].setResolution(deviceAddress, tempPrecision);
+      isIni[index] = 1;
+  }
 
-    Serial.println("Done");
+  Serial.println("Done");
 }
 
 // Returns temperature of individual valve sensor
 float airflowTemp(int valveNumber) {
-    int index = valveNumber-1;
-    sensors[index].requestTemperatures();
-    return sensors[index].getTempCByIndex(0);
+  int index = valveNumber-1;
+  sensors[index].requestTemperatures();
+  return sensors[index].getTempCByIndex(0);
 }

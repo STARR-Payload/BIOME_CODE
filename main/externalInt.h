@@ -6,10 +6,7 @@ int buzzerPin = 7;
 const int mosfetOne = 8;
 const int mosfetTwo = 9;
 const int mosfetThree = 10;
-
-int secret[] = {
-    2,1,2,1,0,1,1,1,1,0,1,2,1,0,1,1,0,1,1,1,0,2,0,1,1,0,1,2,0,1,2,0,2,1,0,0,1,2,1,1,0,1,0,2,2,0,2,2,0,1,0,1,2,1,0,0,1,1,1,2,0,1,0,2,1,0,2,0,1,0,1,2,1,0,0,0,0
-};
+int secret[] = {2,1,2,1,0,1,1,1,1,0,1,2,1,0,1,1,0,1,1,1,0,2,0,1,1,0,1,2,0,1,2,0,2,1,0,0,1,2,1,1,0,1,0,2,2,0,2,2,0,1,0,1,2,1,0,0,1,1,1,2,0,1,0,2,1,0,2,0,1,0,1,2,1,0,0,0,0};
 
 
 void buzzer(int time) { // time is in 1/10 second so if time == 10 then buzz for 1 sec
@@ -30,15 +27,15 @@ void decoder() { // dont worry about it
   for (int i = 0; i < sizeof(secret)/sizeof(int); i ++) {
     switch (secret[i]) {
       case 0:
-        delay(250);
+        delay(250); // 250
         break;
       case 1:
-        buzzer(5);
-        delay(250);
+        buzzer(5); // 5
+        delay(250); // 250
         break;
       case 2:
-        buzzer(10);
-        delay(250);
+        buzzer(10); // 10
+        delay(250); // 250
         break;
     }
   }

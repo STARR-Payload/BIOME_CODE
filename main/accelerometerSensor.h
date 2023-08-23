@@ -3,8 +3,6 @@
 #include <flagsapi.h>
 #include <Adafruit_ICM20649.h>
 #include <Adafruit_Sensor.h>
-
-
 Adafruit_ICM20649 icm;
 sensors_event_t accel;
 sensors_event_t gyro;
@@ -40,7 +38,6 @@ uint16_t ICM20649Setup(void) {
   Serial.println(gyro_rate);
   Serial.println();
   
-
   return 0;
 }
 
@@ -65,6 +62,6 @@ float ICM20469Tempread() {
 
 float ICM20469NormVector() {
   icm.getEvent(&accel, &gyro, &temp);
-  return accel.acceleration.x + accel.acceleration.y + accel.acceleration.z;
+  return accel.acceleration.y + accel.acceleration.x + accel.acceleration.z;
 
 }

@@ -7,6 +7,7 @@
 Adafruit_LIS3MDL lis3mdl;
 sensors_event_t event;
 
+
 uint16_t LIS3MDLSetup(void) {
   
   if (!lis3mdl.begin_I2C()) {
