@@ -1,5 +1,3 @@
-int outletTempSensorOne = 2;
-int outletTempSensorTwo = 3;
 /*
  Copyright 2023 STARR Student Group at University of ALberta
  Lead: 2023, Christiaan Lemmer Venter, christiaanlemmer@hotmail.com
@@ -32,43 +30,28 @@ int outletTempSensorTwo = 3;
   POSSIBILITY OF SUCH DAMAGE.
 */
 
-int outletTempSensorThree = 5;
-int outletTempSensorFour = 6;
-int buzzerPin = 7;
-const int mosfetOne = 8;
-const int mosfetTwo = 9;
-const int mosfetThree = 10;
-int secret[] = {2,1,2,1,0,1,1,1,1,0,1,2,1,0,1,1,0,1,1,1,0,2,0,1,1,0,1,2,0,1,2,0,2,1,0,0,1,2,1,1,0,1,0,2,2,0,2,2,0,1,0,1,2,1,0,0,1,1,1,2,0,1,0,2,1,0,2,0,1,0,1,2,1,0,0,0,0};
 
 
-void buzzer(int time) { // time is in 1/10 second so if time == 10 then buzz for 1 sec
-  	digitalWrite(buzzerPin, HIGH);
-  	delay(time * 100);
-  	digitalWrite(buzzerPin, LOW);
+//http://eggtimerrocketry.com/wp-content/uploads/2021/05/Eggtimer-Telemetry-Data-Format.pdf
+
+static const char TerminatorByte = '>'; // Terminator byte - ohhhh no whats happening I feel different..... ARGGGG I AM THE TERMINATOR, ILL BE BACK
+
+typedef struct dataPacket{
+    char type;
+    long long int data;
+} dataPacket;
+
+int serialDataLeft() {
+  return Serial.available() > 0 ? 1 : 0;
 }
 
-void mosfetOn(int relayPin) { 
-  	digitalWrite(relayPin, HIGH); 
-}
-
-void mosfetOff(int relayPin) {
-  	digitalWrite(relayPin, LOW);
-}
-
-void decoder() { // dont worry about it
-  for (int i = 0; i < sizeof(secret)/sizeof(int); i ++) {
-    switch (secret[i]) {
-      case 0:
-        delay(250); // 250
-        break;
-      case 1:
-        buzzer(5); // 5
-        delay(250); // 250
-        break;
-      case 2:
-        buzzer(10); // 10
-        delay(250); // 250
-        break;
-    }
-  }
+dataPacket serialRead() {
+    String DataStr;
+    dataPacket Datapacket;
+    char startByte = Serial.read();
+    DataStr = Serial.readStringUntil(TerminatorByte);
+    Datapacket.type = startByte;
+    int DataInt = DataStr.toInt();
+    Datapacket.data = DataInt;
+    return Datapacket;
 }
