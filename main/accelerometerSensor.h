@@ -94,5 +94,4 @@ float ICM20469Tempread() {
 float ICM20469NormVector() {
   icm.getEvent(&accel, &gyro, &temp);
   return accel.acceleration.y + accel.acceleration.x + accel.acceleration.z;
-
 }

@@ -58,29 +58,3 @@ uint16_t BME680readingCheck() {
   return 0;
 }
 
-/*
-float BME680TempRead(){
-  bme.performReading();
-  return bme.temperature; // C
-}
-
-float BME680PressureRead() {
-  bme.performReading();
-  return bme.pressure / 100.0; // hPa
-}
-
-float BME680humdityRead(){
-  bme.performReading();
-  return bme.humidity; // %
-}
-
-float BME680GasRead() {
-  bme.performReading();
-  return bme.gas_resistance / 1000.0; // KOhms
-}
-
-float BME680AltitudeRead() {
-  bme.performReading();
-  return bme.readAltitude(SEALEVELPRESSURE_HPA); // meters 
-}
-*/
